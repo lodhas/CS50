@@ -44,7 +44,6 @@ def result(board, action):
         return
     new_board[i][j] = player(board)
     print(new_board)
-    print(terminal(new_board))
     return new_board
 
 
@@ -103,7 +102,6 @@ def value(board):
         print(utility(board))
         return utility(board)
     a_set = actions(board)
-    print(board, a_set)
     vals =[]
     for b in a_set:
         vals.append(value(result(board, b)))

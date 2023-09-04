@@ -1,7 +1,7 @@
 """
 Tic Tac Toe Player
 """
-
+import copy
 import math
 
 X = "X"
@@ -36,12 +36,15 @@ def actions(board):
 
 
 def result(board, action):
-    new_board = board
+    new_board = copy.deepcopy(board)
     i, j = action
-    if board[i][j] != EMPTY:
+    print(i, j)
+    if board[i][j] is not None:
         raise NameError("Invalid Action")
         return
     new_board[i][j] = player(board)
+    print(new_board)
+    print(terminal(new_board))
     return new_board
 
 
@@ -63,7 +66,7 @@ def winner(board):
     return None
 
 def terminal(board):
-    if winner(board) is not None or not any(EMPTY for r in board):
+    if winner(board) is not None or not any(EMPTY in r for r in board):
         return True
     return False
 
@@ -87,19 +90,27 @@ def minimax(board):
     a_list = list(actions(board))
     vals = []
     for a in a_list:
-        vals.append(value(a))
-    i = vals.index(max(vals))
+        vals.append(value(result(board, a)))
+    if player(board) == X:
+        i = vals.index(max(vals))
+    elif player(board) == O:
+        i = vals.index(min(vals))
     return a_list[i]
 
 
 def value(board):
     if terminal(board):
+        print(utility(board))
         return utility(board)
     a_set = actions(board)
-    if player(board) == X:
-        return min(value(b) for b in a_set)
+    print(board, a_set)
+    vals =[]
+    for b in a_set:
+        vals.append(value(result(board, b)))
     if player(board) == O:
-        return max(value(b) for b in a_set)
+        return min(vals)
+    elif player(board) == X:
+        return max(vals)
 
 
 
